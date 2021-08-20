@@ -355,11 +355,11 @@ www-data@quirk:/var/www/ka_boom$
 # www-data to user
 bakup.zip file is present in `/var/www` so i transfered it to my local machine. 
 
-![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/17.PNG)
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/18.PNG)
 
 bakup.zip file is password protected, we need to crack it first. 
 
-![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/18.PNG)
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/17.PNG)
 
 using zip2john to get the hash and cracked the hash with johntheripper. 
 `zip2john bakup.zip > zip.hash.txt`
