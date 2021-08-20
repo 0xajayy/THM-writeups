@@ -647,6 +647,8 @@ deku@quirk:/home/deku$
 
 executing ldconfig loads library from deku home directory confirm them by ldd.
 
-![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/31.PNG)
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/30.PNG)
 
 Executing knife with --shell it will loads our malicious library, knife is  a SUID binary so it spawns a beautiful root shell. 
+
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/31.PNG)
