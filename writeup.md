@@ -1,5 +1,6 @@
-# Note: Add quirk.htb in /etc/hosts
-Initial enumuration
+
+# Initial enumuration
+## Note: add quirk.htb in /etc/hosts
 Scanning with nmap, we have 2 ports open ssh on port 22 and http on port 80
 
 ```nmap
